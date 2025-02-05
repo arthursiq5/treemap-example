@@ -1,4 +1,4 @@
-import Treemap from "./treemap"
+import Tree from "./Tree/Tree"
 
 const canva = document.getElementById('chart')
 
@@ -11,5 +11,12 @@ const data = [
     { name: 'Milho', value: 10, color: '#ddfe99' },
 ]
 
+const tree = Tree.buildFromArray(data)
+console.log(tree);
+console.log(tree.getDepth())
+console.log(tree.sum())
+
+/*
 const t = new Treemap(data, canva)
 t.render()
+*/
