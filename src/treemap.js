@@ -2,16 +2,24 @@ const Treemap = (function() {
     'use strict';
     let canva;
     let context;
-    const calcSidehByArea = (area, side) => area / side
-    const calcSide = (startPoint, endPoint, area, vertical) => {
-        let side = vertical ? (endPoint.y - startPoint.y) : (endPoint.x - startPoint.x)
-        return calcSidehByArea(area, side)
-    }
+
     class Treemap {
         constructor(data, canvas) {
             canva = canvas
             context = canva.getContext('2d')
             this._data = data;
+        }
+
+        getDrawCoordinates(area, vertical, startPoint, middlePoint) {
+            const direction = 'y'
+            const fixedSide = 'x'
+            const side = middlePoint[fixedSide] - startPoint[fixedSide]
+            const lineToDraw = area / side
+            const drawPoints = {}
+            drawPoints[fixedSide] = middlePoint[fixedSide]
+            drawPoints[direction] = lineToDraw
+
+            return drawPoints
         }
 
         render() {
@@ -21,22 +29,26 @@ const Treemap = (function() {
             let vertical = true;
             let startPoint = {y: 0, x: 0}
             let endPoint = {y: canva.height, x: canva.width}
-            let middlePoint = {x: canva.width / 2, y: canva.width}
+            let middlePoint = {x: canva.width * 0.45, y: canva.height}
             const areaTotal = this._data.reduce((sum, item) => sum + item.value, 0)
             const canvaArea = (canva.width * canva.height);
             let currentArea = 0.5;
-            let occupiedArea = 0
             let isFirstLoop = true;
+            
+
+            context.fillStyle = '#ccc'
+            context.fillRect(0, 0, endPoint.x, endPoint.y);
+
+            const calcItemArea = (item) => (item.value * canvaArea) / areaTotal
 
             for (const item of this._data) {
+                item.area = calcItemArea(item)
                 if (currentLine.length === 0) {
                     currentLine.push(item);
                     continue;
                 }
                 const currentLineSum = currentLine.reduce((sum, item) => sum + item.value, 0)
                 const lineArea = (currentLineSum + item.value) / areaTotal
-                console.log(lineArea);
-                console.log(currentArea)
                 
                 if (lineArea > currentArea) {
                     matrix.push(currentLine)
@@ -46,11 +58,11 @@ const Treemap = (function() {
                     }
                     currentLine = [item];
                     currentArea *= 0.5;
-                    console.log('maior que');
                     continue;
                 }
                 if (lineArea === currentArea) {
                     currentLine.push(item)
+
                     matrix.push(currentLine)
                     if (isFirstLoop) {
                         this.renderLine(currentLine, vertical, startPoint, middlePoint)
@@ -59,26 +71,43 @@ const Treemap = (function() {
                     
                     currentLine = []
                     currentArea *= 0.5;
-                    console.log('igual a');
                     continue;
                 }
                 currentLine.push(item)
             }
 
-            console.log(currentLine)
-            console.log(matrix)
-
-
         }
 
         renderLine(data, vertical, startPoint, endPoint) {
-            data.forEach(item => {
-                context.fillStyle = item.color;
-                context.fillRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+            let startPoints = startPoint;
+            let drawPointsDebug = []
+            const calcNewStartPoint = (startPoint, middlePoint) => {
+                const direction = 'y'
+                const fixedSide = 'x'
+                const drawPoints = {}
+                drawPoints[fixedSide] = startPoint[fixedSide]
+                drawPoints[direction] = middlePoint[direction]
 
-                context.strokeStyle = "black";
-                context.strokeRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+                return drawPoints
+            }
+            let drawed = false;
+            data.forEach(item => {
+                const pointToDraw = this.getDrawCoordinates(item.area, vertical, startPoints, endPoint)
+                drawPointsDebug.push({item,startPoints, pointToDraw})
+                this.renderItem(item, startPoints, pointToDraw)
+                startPoints = calcNewStartPoint(startPoints, pointToDraw)
             });
+            
+        }
+
+        renderItem(item, startPoint, endPoint) {
+            const i = {item, startPoint, endPoint}
+
+            context.fillStyle = item.color;
+            context.fillRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+            context.strokeStyle = "black";
+            context.strokeRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
         }
     }
 
