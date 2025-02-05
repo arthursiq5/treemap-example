@@ -6,13 +6,12 @@ export default class Tree {
     }
 
     static buildFromArray(data) {
-        const root = new Node()
+        let root = new Node()
         let dataSet = JSON.parse(JSON.stringify(data))
         const dataSum = data.reduce((sum, el) => el.value + sum, 0)
         let sumLimit = dataSum * 0.5
 
         while(dataSet.length > 0) {
-            const node = new Node()
             let currentNodeData = []
             let dataSumLoop = 0;
             while(true) {
@@ -22,8 +21,8 @@ export default class Tree {
                 currentNodeData.push(element)
                 dataSumLoop += element.value
             }
-            currentNodeData.forEach(el => node.addChildByData(el))
-            root.getLastRoot().addChild(node)
+            currentNodeData.forEach(el => root.getLastRoot().addChildByData(el))
+            root.getLastRoot().addChild(new Node())
             sumLimit = (dataSum - root.sum()) * 0.5
         }
 
@@ -39,5 +38,13 @@ export default class Tree {
 
     sum() {
         return this.root.sum()
+    }
+
+    sliceTree() {
+        const leftRoot = this.root.getLeft();
+        const rightRoot = this.root.getRight();
+        let left = !!leftRoot ? new Tree(leftRoot) : null
+        let right = !!rightRoot ? new Tree(rightRoot) : null
+        return { left, right }
     }
 }

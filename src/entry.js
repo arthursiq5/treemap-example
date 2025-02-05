@@ -12,9 +12,7 @@ const data = [
 ]
 
 const tree = Tree.buildFromArray(data)
-console.log(tree);
-console.log(tree.getDepth())
-console.log(tree.sum())
+
 
 /*
 const t = new Treemap(data, canva)

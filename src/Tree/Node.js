@@ -20,6 +20,22 @@ export default class Node {
         this.addChild(new Node(data))
     }
 
+    getLeft() {
+        const filteredChildren = this._children.filter(child => child._data !== null);
+        if (filteredChildren.length > 0) {
+            return filteredChildren;
+        }
+        return null;
+    }
+
+    getRight() {
+        const filteredChildren = this._children.filter(child => child._data === null);
+        if (filteredChildren.length > 0) {
+            return filteredChildren.at(-1);
+        }
+        return null;
+    }
+
     getLastRoot() {
         const filteredChildren = this._children.filter(child => child._data === null);
         if (filteredChildren.length > 0) {
