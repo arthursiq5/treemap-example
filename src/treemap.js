@@ -1,3 +1,5 @@
+import AbstractDrawLineStrategy from "./DrawLinesStrategy/AbstractDrawLineStrategy";
+
 const Treemap = (function() {
     'use strict';
     let canva;
@@ -8,18 +10,6 @@ const Treemap = (function() {
             canva = canvas
             context = canva.getContext('2d')
             this._data = data;
-        }
-
-        getDrawCoordinates(area, vertical, startPoint, middlePoint) {
-            const direction = 'y'
-            const fixedSide = 'x'
-            const side = middlePoint[fixedSide] - startPoint[fixedSide]
-            const lineToDraw = area / side
-            const drawPoints = {}
-            drawPoints[fixedSide] = middlePoint[fixedSide]
-            drawPoints[direction] = lineToDraw
-
-            return drawPoints
         }
 
         render() {
@@ -53,7 +43,7 @@ const Treemap = (function() {
                 if (lineArea > currentArea) {
                     matrix.push(currentLine)
                     if (isFirstLoop) {
-                        this.renderLine(currentLine, vertical, startPoint, middlePoint)
+                        (new AbstractDrawLineStrategy(context,currentLine,vertical,startPoint,middlePoint)).renderLine()
                         isFirstLoop = false;
                     }
                     currentLine = [item];
@@ -65,7 +55,7 @@ const Treemap = (function() {
 
                     matrix.push(currentLine)
                     if (isFirstLoop) {
-                        this.renderLine(currentLine, vertical, startPoint, middlePoint)
+                        (new AbstractDrawLineStrategy(context,currentLine,vertical,startPoint,middlePoint)).renderLine()
                         isFirstLoop = false;
                     }
                     
@@ -76,38 +66,6 @@ const Treemap = (function() {
                 currentLine.push(item)
             }
 
-        }
-
-        renderLine(data, vertical, startPoint, endPoint) {
-            let startPoints = startPoint;
-            let drawPointsDebug = []
-            const calcNewStartPoint = (startPoint, middlePoint) => {
-                const direction = 'y'
-                const fixedSide = 'x'
-                const drawPoints = {}
-                drawPoints[fixedSide] = startPoint[fixedSide]
-                drawPoints[direction] = middlePoint[direction]
-
-                return drawPoints
-            }
-            let drawed = false;
-            data.forEach(item => {
-                const pointToDraw = this.getDrawCoordinates(item.area, vertical, startPoints, endPoint)
-                drawPointsDebug.push({item,startPoints, pointToDraw})
-                this.renderItem(item, startPoints, pointToDraw)
-                startPoints = calcNewStartPoint(startPoints, pointToDraw)
-            });
-            
-        }
-
-        renderItem(item, startPoint, endPoint) {
-            const i = {item, startPoint, endPoint}
-
-            context.fillStyle = item.color;
-            context.fillRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
-
-            context.strokeStyle = "black";
-            context.strokeRect(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
         }
     }
 
