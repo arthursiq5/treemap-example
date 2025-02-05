@@ -1,4 +1,6 @@
 import AbstractDrawLineStrategy from "./DrawLinesStrategy/AbstractDrawLineStrategy";
+import ColumnDrawLineStrategy from "./DrawLinesStrategy/ColumnDrawLineStrategy";
+import DrawLineContext from "./DrawLinesStrategy/DrawLineContext";
 
 const Treemap = (function() {
     'use strict';
@@ -24,7 +26,19 @@ const Treemap = (function() {
             const canvaArea = (canva.width * canva.height);
             let currentArea = 0.5;
             let isFirstLoop = true;
-            
+            const strCtx = new DrawLineContext()
+            strCtx.setContext(context)
+
+            const draw = (data, vertical, start, end) => {
+                const strategy = /*vertical ?*/ new ColumnDrawLineStrategy() /*: new LineDrawLineStrategy() */
+                strCtx.setStrategy(strategy)
+                strCtx.setData(data)
+                strCtx.setVertical(vertical)
+                strCtx.setStartPoint(start)
+                strCtx.setEndPoint(end)
+                
+                strCtx.renderLine()
+            }
 
             context.fillStyle = '#ccc'
             context.fillRect(0, 0, endPoint.x, endPoint.y);
@@ -43,7 +57,7 @@ const Treemap = (function() {
                 if (lineArea > currentArea) {
                     matrix.push(currentLine)
                     if (isFirstLoop) {
-                        (new AbstractDrawLineStrategy(context,currentLine,vertical,startPoint,middlePoint)).renderLine()
+                        draw(currentLine, vertical, startPoint, middlePoint)
                         isFirstLoop = false;
                     }
                     currentLine = [item];
@@ -55,7 +69,7 @@ const Treemap = (function() {
 
                     matrix.push(currentLine)
                     if (isFirstLoop) {
-                        (new AbstractDrawLineStrategy(context,currentLine,vertical,startPoint,middlePoint)).renderLine()
+                        draw(currentLine, vertical, startPoint, middlePoint)
                         isFirstLoop = false;
                     }
                     
