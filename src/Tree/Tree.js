@@ -28,7 +28,7 @@ export default class Tree {
             sumLimit = (dataSum - root.sum()) * 0.5
         }
 
-        return new Tree(root)
+        return new Tree(root, direction)
     }
 
     getDepth(root = this.root, depth = 0) {

@@ -70,11 +70,10 @@ export default class Graph {
             const slicedTree = currentTree.sliceTree()
             const left = slicedTree.left
             const right = slicedTree.right
-            console.log(currentTree);
             currentTree = right
             const startPoint = this.canva.startPoint
             let middlePoint;
-            if (slicedTree.direction === Direction.leftToRight) {
+            if (left.direction === Direction.leftToRight) {
                 middlePoint = calcMiddlePointLeftToRight(
                     this.tree.calcPercentage(left) * this.canva.getArea(),
                     startPoint,
@@ -107,9 +106,9 @@ export default class Graph {
 
     renderTree(tree, startPoint, endPoint) {
         if (tree.direction === Direction.leftToRight) {
-            this.renderTreeUpToDown(tree, startPoint, endPoint)
-        } else {
             this.renderTreeLeftToRight(tree, startPoint, endPoint)
+        } else {
+            this.renderTreeUpToDown(tree, startPoint, endPoint)
         }
         //this.renderTreeUpToDown(tree, startPoint, endPoint)
     }
@@ -136,13 +135,13 @@ export default class Graph {
             const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
             console.log(areaNode)
 
-            const endPointSquare = calcMiddlePointUpToDown(
+            const endPointSquare = calcMiddlePointLeftToRight(
                 areaNode,
                 currentPoint,
                 endPoint
             )
             const rect = new Rect(currentPoint, endPointSquare, node.getData().color)
-            currentPoint = recalcStartPointUpToDown(
+            currentPoint = recalcStartPointLeftToRight(
                 areaNode,
                 currentPoint,
                 endPoint
