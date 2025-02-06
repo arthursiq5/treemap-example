@@ -46,7 +46,9 @@ export default class Node {
 
     sum() {
         let ans = 0
-        if (!!this._data) ans += this._data.value
+        if (!!this._data) {
+            ans += this._data.value
+        }
         this._children.forEach(child => {
             ans += child.sum()
         })

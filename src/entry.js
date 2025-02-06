@@ -1,3 +1,4 @@
+import Graph, { CanvaFacade } from "./Graph"
 import Tree from "./Tree/Tree"
 
 const canva = document.getElementById('chart')
@@ -12,9 +13,10 @@ const data = [
 ]
 
 const tree = Tree.buildFromArray(data)
+//console.log(tree);
+//console.log(tree.sliceTree());
 
 
-/*
-const t = new Treemap(data, canva)
-t.render()
-*/
+
+const g = new Graph(canva, data)
+g.render()

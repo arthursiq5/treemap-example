@@ -1,11 +1,13 @@
+import Direction from "../DirectionEnum"
 import Node from "./Node"
 
 export default class Tree {
-    constructor(root = null) {
+    constructor(root = null, direction = Direction.leftToRight) {
         this.root = root
+        this.direction = Direction.leftToRight
     }
 
-    static buildFromArray(data) {
+    static buildFromArray(data, direction = Direction.leftToRight) {
         let root = new Node()
         let dataSet = JSON.parse(JSON.stringify(data))
         const dataSum = data.reduce((sum, el) => el.value + sum, 0)
@@ -22,7 +24,7 @@ export default class Tree {
                 dataSumLoop += element.value
             }
             currentNodeData.forEach(el => root.getLastRoot().addChildByData(el))
-            root.getLastRoot().addChild(new Node())
+            if (dataSet.length > 0) root.getLastRoot().addChild(new Node())
             sumLimit = (dataSum - root.sum()) * 0.5
         }
 
@@ -41,10 +43,19 @@ export default class Tree {
     }
 
     sliceTree() {
-        const leftRoot = this.root.getLeft();
+        const nextDirection = this.direction == Direction.leftToRight ? Direction.upToDown : Direction.leftToRight;
+        const leftRootArr = this.root.getLeft()
+        const leftRoot = new Node();
+        leftRoot._children = leftRootArr
         const rightRoot = this.root.getRight();
-        let left = !!leftRoot ? new Tree(leftRoot) : null
-        let right = !!rightRoot ? new Tree(rightRoot) : null
+        
+        let left = !!leftRoot ? new Tree(leftRoot, this.direction) : null
+        let right = !!rightRoot ? new Tree(rightRoot, nextDirection) : null
+        
         return { left, right }
+    }
+
+    calcPercentage(tree) {
+        return tree.sum() / this.sum()
     }
 }
