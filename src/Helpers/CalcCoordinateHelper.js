@@ -1,8 +1,6 @@
 import { Point, Rect } from "../Graph"
 
 export function calcMiddlePointLeftToRight(area, initialPointer, endPointer) {
-    console.log({area, initialPointer, endPointer});
-
     const y = endPointer.y
     const x = area / (endPointer.y - initialPointer.y)
     return new Point(x, y)

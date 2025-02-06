@@ -34,8 +34,11 @@ export class CanvaFacade {
         this.context = this.canva.getContext('2d')
         this.drawnArea = 0;
         this.startPoint = new Point()
-        this.endPoint = new Point(800, 600)//this.canva.width, this.canva.height)
-        
+        this.endPoint = this.getDimensions()
+    }
+
+    getDimensions() {
+        return new Point(800,600)//this.canva.width, this.canva.height)
     }
 
     getArea() {
@@ -73,6 +76,12 @@ export default class Graph {
             currentTree = right
             const startPoint = this.canva.startPoint
             let middlePoint;
+            const recalcEndPoint = (startPoint) => {
+                const newEndPoint = this.canva.getDimensions()
+                newEndPoint.x = newEndPoint.x - startPoint.x
+                newEndPoint.y = newEndPoint.y - startPoint.y
+                this.canva.endPoint = newEndPoint
+            }
             if (left.direction === Direction.leftToRight) {
                 middlePoint = calcMiddlePointLeftToRight(
                     this.tree.calcPercentage(left) * this.canva.getArea(),
@@ -110,7 +119,6 @@ export default class Graph {
         } else {
             this.renderTreeUpToDown(tree, startPoint, endPoint)
         }
-        //this.renderTreeUpToDown(tree, startPoint, endPoint)
     }
 
     renderTreeLeftToRight(tree, startPoint, endPoint) {
@@ -133,7 +141,6 @@ export default class Graph {
         
         const drawCoordinates = tree.root.getChild().map(node => {
             const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
-            console.log(areaNode)
 
             const endPointSquare = calcMiddlePointLeftToRight(
                 areaNode,
@@ -149,9 +156,6 @@ export default class Graph {
             return rect
         })
 
-        console.log(drawCoordinates);
-        
-        
         return drawCoordinates;
     
     }
@@ -163,7 +167,6 @@ export default class Graph {
         
         const drawCoordinates = tree.root.getChild().map(node => {
             const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
-            console.log(areaNode)
 
             const endPointSquare = calcMiddlePointUpToDown(
                 areaNode,
@@ -178,9 +181,6 @@ export default class Graph {
             )
             return rect
         })
-
-        console.log(drawCoordinates);
-        
         
         return drawCoordinates;
     
