@@ -1,4 +1,4 @@
-import { Point, Rect } from "../Graph"
+import Point from "../Graphics/Point"
 
 export function calcMiddlePointLeftToRight(area, initialPointer, endPointer) {
     const y = endPointer.y

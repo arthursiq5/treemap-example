@@ -1,57 +1,12 @@
 import Direction from "./DirectionEnum";
+import CanvaFacade from "./Graphics/CanvaFacade";
+import Point from "./Graphics/Point";
+import Rect from "./Graphics/Rect";
 import { calcMiddlePointLeftToRight, calcMiddlePointUpToDown, recalcStartPointLeftToRight, recalcStartPointUpToDown } from "./Helpers/CalcCoordinateHelper";
 import Tree from "./Tree/Tree"
 
 async function pauseForTwoSeconds() {
     return new Promise(resolve => setTimeout(resolve, 2000));
-}
-
-export class Rect {
-    constructor(startPoint, endPoint, color) {
-        this.startPoint = startPoint
-        this.endPoint = endPoint
-        this.color = color
-    }
-}
-
-export class Point {
-    constructor(x=0, y=0) {
-        this.x = x
-        this.y = y
-    }
-
-    calcArea(secondPoint) {
-        if (this.x < secondPoint.x || this.y < secondPoint.y){
-            return secondPoint.calcArea(this);
-        }
-        return (this.x - secondPoint - x) * (this.y - secondPoint.y)
-    }
-}
-
-export class CanvaFacade {
-    constructor(canva) {
-        this.canva = canva
-        this.context = this.canva.getContext('2d')
-        this.drawnArea = 0;
-        this.startPoint = new Point()
-        this.endPoint = this.getDimensions()
-    }
-
-    getDimensions() {
-        return new Point(800,600)//this.canva.width, this.canva.height)
-    }
-
-    getArea() {
-        return this.endPoint.x * this.endPoint.y
-    }
-
-    drawRect(rect){
-        this.context.fillStyle = rect.color;
-        this.context.fillRect(rect.startPoint.x, rect.startPoint.y, rect.endPoint.x, rect.endPoint.y);
-
-        this.context.strokeStyle = "black";
-        this.context.strokeRect(rect.startPoint.x, rect.startPoint.y, rect.endPoint.x, rect.endPoint.y);
-    }
 }
 
 export default class Graph {
@@ -76,12 +31,7 @@ export default class Graph {
             currentTree = right
             const startPoint = this.canva.startPoint
             let middlePoint;
-            const recalcEndPoint = (startPoint) => {
-                const newEndPoint = this.canva.getDimensions()
-                newEndPoint.x = newEndPoint.x - startPoint.x
-                newEndPoint.y = newEndPoint.y - startPoint.y
-                this.canva.endPoint = newEndPoint
-            }
+
             if (left.direction === Direction.leftToRight) {
                 middlePoint = calcMiddlePointLeftToRight(
                     this.tree.calcPercentage(left) * this.canva.getArea(),
