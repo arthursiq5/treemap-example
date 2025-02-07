@@ -56,6 +56,7 @@ export default class Tree {
     }
 
     calcPercentage(tree) {
-        return tree.sum() / this.sum()
+        const percentage = tree.sum() / this.sum()
+        return percentage
     }
 }

@@ -27,12 +27,11 @@ export default class CanvaFacade {
     }
 
     getArea() {
-        return this.endPoint.x * this.endPoint.y
+        const dimensions = this.getDimensions()
+        return dimensions.x * dimensions.y
     }
 
     drawRect(rect){
-        console.log(rect);
-        
         this.context.fillStyle = rect.color;
         this.context.fillRect(rect.startPoint.x, rect.startPoint.y, rect.endPoint.x, rect.endPoint.y);
 

@@ -1,23 +1,18 @@
 import Point from "../Graphics/Point"
 
 export function calcMiddlePointLeftToRight(area, initialPointer, endPointer) {
-    console.log({desc: 'calcMiddlePointLeftToRight', area, initialPointer, endPointer});
-    
     const y = endPointer.y
-    const x = area / (endPointer.y - initialPointer.y)
+    const x = area / endPointer.y
     return new Point(x, y)
 }
 
 export function recalcStartPointLeftToRight(area, initialPointer, endPointer) {
-    console.log({area, initialPointer, endPointer})
     const x = area / endPointer.y
     return new Point(x, initialPointer.y)
 }
 
 export function calcMiddlePointUpToDown(area, initialPointer, endPointer) {
-    console.log({area, initialPointer, endPointer});
-    
-    const y = area / (endPointer.x - initialPointer.x)
+    const y = area / endPointer.x
     return new Point(endPointer.x, y)
 }
 
