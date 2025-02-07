@@ -31,6 +31,7 @@ export default class Graph {
             currentTree = right
             const startPoint = this.canva.startPoint
             let middlePoint;
+            let newStartPoint;
 
             if (left.direction === Direction.leftToRight) {
                 middlePoint = calcMiddlePointLeftToRight(
@@ -39,7 +40,7 @@ export default class Graph {
                     this.canva.endPoint
                 )
                 
-                this.canva.startPoint = recalcStartPointLeftToRight(
+                newStartPoint = recalcStartPointLeftToRight(
                     this.tree.calcPercentage(left) * this.canva.getArea(),
                     startPoint,
                     this.canva.endPoint
@@ -50,8 +51,10 @@ export default class Graph {
                     startPoint,
                     this.canva.endPoint
                 )
+                console.log(middlePoint);
                 
-                this.canva.startPoint = recalcStartPointUpToDown(
+                
+                newStartPoint = recalcStartPointUpToDown(
                     this.tree.calcPercentage(left) * this.canva.getArea(),
                     startPoint,
                     this.canva.endPoint
@@ -59,11 +62,14 @@ export default class Graph {
             }
 
             this.renderTree(left, startPoint, middlePoint)
+            this.canva.setStartPoint(newStartPoint)
             counter++
         }
     }
 
     renderTree(tree, startPoint, endPoint) {
+        console.log({desc: 'renderTree',tree, startPoint, endPoint});
+        
         if (tree.direction === Direction.leftToRight) {
             this.renderTreeLeftToRight(tree, startPoint, endPoint)
         } else {
@@ -72,14 +78,12 @@ export default class Graph {
     }
 
     renderTreeLeftToRight(tree, startPoint, endPoint) {
-        this.canva.drawRect(new Rect(startPoint, endPoint, 'red'))
         const coordinates = this.getDrawCoordinatesToTreeLeftToRight(tree, startPoint, endPoint)
         coordinates.forEach(rect => setTimeout(this.canva.drawRect(rect), 3000));
 
     }
 
     renderTreeUpToDown(tree, startPoint, endPoint) {
-        this.canva.drawRect(new Rect(startPoint, endPoint, 'purple'))
         const coordinates = this.getDrawCoordinatesToTreeUpToDown(tree, startPoint, endPoint)
         coordinates.forEach(rect => setTimeout(this.canva.drawRect(rect), 3000));
     }
@@ -87,7 +91,7 @@ export default class Graph {
     getDrawCoordinatesToTreeUpToDown(tree, startPoint, endPoint) {
         const areaTotal = (endPoint.y - startPoint.y) * (endPoint.x * startPoint.x)
         const sumTotal = tree.sum()
-        let currentPoint = new Point(startPoint.x, startPoint.x)
+        let currentPoint = new Point(startPoint.x, startPoint.y)
         
         const drawCoordinates = tree.root.getChild().map(node => {
             const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
@@ -103,6 +107,8 @@ export default class Graph {
                 currentPoint,
                 endPoint
             )
+            console.log(rect)
+
             return rect
         })
 
@@ -111,9 +117,12 @@ export default class Graph {
     }
 
     getDrawCoordinatesToTreeLeftToRight(tree, startPoint, endPoint) {
+
+        console.log({desc: 'getDrawCoordinatesToLeftToRight', startPoint, endPoint});
+
         const areaTotal = (endPoint.y - startPoint.y) * (endPoint.x * startPoint.x)
         const sumTotal = tree.sum()
-        let currentPoint = new Point(startPoint.x, startPoint.x)
+        let currentPoint = new Point(startPoint.x, startPoint.y)
         
         const drawCoordinates = tree.root.getChild().map(node => {
             const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
@@ -127,10 +136,12 @@ export default class Graph {
             currentPoint = recalcStartPointUpToDown(
                 areaNode,
                 currentPoint,
-                endPoint
+                endPointSquare
             )
             return rect
         })
+
+        console.log({desc: 'getDrawCoordinatesToLeftToRight ans', drawCoordinates});
         
         return drawCoordinates;
     

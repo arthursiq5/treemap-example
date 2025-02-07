@@ -4,7 +4,7 @@ import Node from "./Node"
 export default class Tree {
     constructor(root = null, direction = Direction.leftToRight) {
         this.root = root
-        this.direction = Direction.leftToRight
+        this.direction = direction
     }
 
     static buildFromArray(data, direction = Direction.leftToRight) {
