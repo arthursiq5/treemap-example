@@ -1,5 +1,4 @@
 import Graph, { CanvaFacade } from "./Graph"
-import Tree from "./Tree/Tree"
 
 const canva = document.getElementById('chart')
 
@@ -11,12 +10,6 @@ const data = [
     { name: 'Passas', value: 15, color: '#00ff99' },
     { name: 'Milho', value: 10, color: '#ddfe99' },
 ]
-
-const tree = Tree.buildFromArray(data)
-//console.log(tree);
-//console.log(tree.sliceTree());
-
-
 
 const g = new Graph(canva, data)
 g.render()

@@ -39,7 +39,11 @@ export default class Tree {
     }
 
     sum() {
-        return this.root.sum()
+        if (!this._sum) {
+            this._sum = this.root.sum()
+
+        }
+        return this._sum
     }
 
     sliceTree() {

@@ -5,10 +5,6 @@ import Rect from "./Graphics/Rect";
 import { calcMiddlePointLeftToRight, calcMiddlePointUpToDown, recalcStartPointLeftToRight, recalcStartPointUpToDown } from "./Helpers/CalcCoordinateHelper";
 import Tree from "./Tree/Tree"
 
-async function pauseForTwoSeconds() {
-    return new Promise(resolve => setTimeout(resolve, 2000));
-}
-
 export default class Graph {
     constructor (canva, data = []) {
         this.canva = new CanvaFacade(canva)
@@ -20,7 +16,7 @@ export default class Graph {
         this.tree = Tree.buildFromArray(data)
     }
 
-    async render() {
+    render() {
         let currentTree = this.tree
         let counter = 0
         const canvasArea = this.canva.getArea()
@@ -85,14 +81,13 @@ export default class Graph {
     }
 
     getDrawCoordinatesToTreeUpToDown(tree, startPoint, endPoint) {
-        const areaTotal = (endPoint.y - startPoint.y) * (endPoint.x * startPoint.x)
-        const sumTotal = tree.sum()
+        const areaCanva = this.canva.getArea()
         let currentPoint = new Point(startPoint.x, startPoint.y)
         
         const drawCoordinates = tree.root.getChild().map(node => {
-            const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
+            const areaNode = (node.sum() * areaCanva) / this.tree.sum()
 
-            const endPointSquare = calcMiddlePointUpToDown(
+            const endPointSquare = calcMiddlePointLeftToRight(
                 areaNode,
                 currentPoint,
                 endPoint
@@ -111,12 +106,11 @@ export default class Graph {
     }
 
     getDrawCoordinatesToTreeLeftToRight(tree, startPoint, endPoint) {
-        const areaTotal = (endPoint.y - startPoint.y) * (endPoint.x * startPoint.x)
-        const sumTotal = tree.sum()
+        const areaCanva = this.canva.getArea()
         let currentPoint = new Point(startPoint.x, startPoint.y)
         
         const drawCoordinates = tree.root.getChild().map(node => {
-            const areaNode = (node.sum() * this.canva.getArea()) / this.tree.sum()
+            const areaNode = (node.sum() * areaCanva) / this.tree.sum()
 
             const endPointSquare = calcMiddlePointUpToDown(
                 areaNode,

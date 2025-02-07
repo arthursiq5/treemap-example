@@ -23,7 +23,7 @@ export default class CanvaFacade {
     }
 
     getDimensions() {
-        return new Point(800,600)//this.canva.width, this.canva.height)
+        return new Point(this.canva.width, this.canva.height)
     }
 
     getArea() {
