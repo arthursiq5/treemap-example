@@ -25,7 +25,7 @@ export default class Graph {
         let counter = 0
         const canvasArea = this.canva.getArea()
         
-        while(!!currentTree && counter <= 3) {
+        while(!!currentTree) {
             const slicedTree = currentTree.sliceTree()
             const left = slicedTree.left
             const right = slicedTree.right
