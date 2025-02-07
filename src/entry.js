@@ -1,4 +1,4 @@
-import Treemap from "./treemap"
+import Graph, { CanvaFacade } from "./Graph"
 
 const canva = document.getElementById('chart')
 
@@ -11,5 +11,5 @@ const data = [
     { name: 'Milho', value: 10, color: '#ddfe99' },
 ]
 
-const t = new Treemap(data, canva)
-t.render()
+const g = new Graph(canva, data)
+g.render()

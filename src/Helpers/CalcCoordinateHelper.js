@@ -1,34 +1,22 @@
-const getDirection = (vertical) => vertical ? 'y' : 'x'
-const getFixedSize = (vertical) => vertical ? 'x' : 'y'
+import Point from "../Graphics/Point"
 
-/**
- * 
- * calculate coordinates to draw
- * 
- * @param number area
- * @param bool vertical 
- * @param {x, y} startPoint 
- * @param {x, y} middlePoint 
- * @returns 
- */
-export function getDrawCoordinates(area, vertical, startPoint, middlePoint) {
-    const direction = getDirection(vertical)
-    const fixedSide = getFixedSize(vertical)
-    const side = middlePoint[fixedSide] - startPoint[fixedSide]
-    const lineToDraw = area / side
-    const drawPoints = {}
-    drawPoints[fixedSide] = middlePoint[fixedSide]
-    drawPoints[direction] = lineToDraw
-
-    return drawPoints
+export function calcMiddlePointLeftToRight(area, initialPointer, endPointer) {
+    const x = area / endPointer.y
+    return new Point(x, endPointer.y)
 }
 
-export function calcNewStartPoint (vertical, startPoint, middlePoint) {
-    const direction = getDirection(vertical)
-    const fixedSide = getFixedSize(vertical)
-    const drawPoints = {}
-    drawPoints[fixedSide] = startPoint[fixedSide]
-    drawPoints[direction] = middlePoint[direction]
+export function recalcStartPointLeftToRight(area, initialPointer, endPointer) {
+    const x = (area / endPointer.y) + initialPointer.x
+    return new Point(x, initialPointer.y)
+}
 
-    return drawPoints
+export function calcMiddlePointUpToDown(area, initialPointer, endPointer) {
+    const y = area / endPointer.x
+    return new Point(endPointer.x, y)
+}
+
+export function recalcStartPointUpToDown(area, initialPointer, endPointer) {
+    const x = initialPointer.x
+    const y = (area / endPointer.x) + initialPointer.y
+    return new Point(x, y)
 }
