@@ -1,15 +1,39 @@
-import Graph, { CanvaFacade } from "./Graph"
+import Graph from "./Graph"
+import { normalize } from "./Helpers/NormalizeData";
+
+window.addEventListener("load", initialize);
+window.addEventListener("resize", resizeCanvas);
 
 const canva = document.getElementById('chart')
+let graph = null;
+let cachedData = null;
 
-const data = [
-    { name: 'Maçã', value: 30, color: '#00ff55' },
-    { name: 'Banana', value: 15, color: '#ffff55' },
-    { name: 'Tutti Fruti', value: 15, color: '#ff00ff' },
-    { name: 'Uva', value: 15, color: '#750095' },
-    { name: 'Passas', value: 15, color: '#00ff99' },
-    { name: 'Milho', value: 10, color: '#ddfe99' },
-]
+function initialize () {
+    resizeCanvas();
+    fetchData();
+}
 
-const g = new Graph(canva, data)
-g.render()
+function resizeCanvas() {
+    canva.width = window.innerWidth;
+    canva.height = window.innerHeight;
+
+    if (graph && cachedData) {
+        graph.render()
+    }
+}
+
+const fetchData = () => {
+    const empresas = ['PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'ABEV3', 'BBAS3', 'B3SA3', 'WEGE3', 'RENT3', 'ITSA4'];
+    const getApiUrl = query => `https://b3api.me/api/quote/${query}`
+    const generatePromises = () => empresas.map(element =>
+        fetch(getApiUrl(element))
+            .then(response => response.json())
+        )
+    Promise.all(generatePromises())
+        .then(results => normalize(results))
+        .then(data => {
+            cachedData = data
+            graph = new Graph(canva, data)
+            graph.render()
+        })
+}

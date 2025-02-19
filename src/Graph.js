@@ -1,7 +1,7 @@
 import Direction from "./DirectionEnum";
 import CanvaFacade from "./Graphics/CanvaFacade";
 import Point from "./Graphics/Point";
-import Rect from "./Graphics/Rect";
+import Rect, { DataRect } from "./Graphics/Rect";
 import { calcMiddlePointLeftToRight, calcMiddlePointUpToDown, recalcStartPointLeftToRight, recalcStartPointUpToDown } from "./Helpers/CalcCoordinateHelper";
 import Tree from "./Tree/Tree"
 
@@ -17,6 +17,7 @@ export default class Graph {
     }
 
     render() {
+        console.log('chamado')
         let currentTree = this.tree
         let counter = 0
         const canvasArea = this.canva.getArea()
@@ -60,6 +61,7 @@ export default class Graph {
             this.canva.setStartPoint(newStartPoint)
             counter++
         }
+        this.canva.resetCanva()
     }
 
     renderTree(tree, startPoint, endPoint) {
@@ -72,12 +74,12 @@ export default class Graph {
 
     renderTreeLeftToRight(tree, startPoint, endPoint) {
         const coordinates = this.getDrawCoordinatesToTreeLeftToRight(tree, startPoint, endPoint)
-        coordinates.forEach(rect => setTimeout(this.canva.drawRect(rect), 3000));
+        coordinates.forEach(rect => this.canva.drawRect(rect));
     }
 
     renderTreeUpToDown(tree, startPoint, endPoint) {
         const coordinates = this.getDrawCoordinatesToTreeUpToDown(tree, startPoint, endPoint)
-        coordinates.forEach(rect => setTimeout(this.canva.drawRect(rect), 3000));
+        coordinates.forEach(rect => this.canva.drawRect(rect));
     }
 
     getDrawCoordinatesToTreeUpToDown(tree, startPoint, endPoint) {
@@ -92,7 +94,8 @@ export default class Graph {
                 currentPoint,
                 endPoint
             )
-            const rect = new Rect(currentPoint, endPointSquare, node.getData().color)
+            const data = node.getData();
+            const rect = new DataRect(currentPoint, endPointSquare, data.color, data)
             currentPoint = recalcStartPointLeftToRight(
                 areaNode,
                 currentPoint,
@@ -117,7 +120,8 @@ export default class Graph {
                 currentPoint,
                 endPoint
             )
-            const rect = new Rect(currentPoint, endPointSquare, node.getData().color)
+            const data = node.getData();
+            const rect = new DataRect(currentPoint, endPointSquare, data.color, data)
             currentPoint = recalcStartPointUpToDown(
                 areaNode,
                 currentPoint,

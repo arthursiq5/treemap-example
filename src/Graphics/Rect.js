@@ -5,3 +5,10 @@ export default class Rect {
         this.color = color
     }
 }
+
+export class DataRect extends Rect {
+    constructor(startPoint, endPoint, color, data) {
+        super(startPoint, endPoint, color)
+        this.data = data
+    }
+}

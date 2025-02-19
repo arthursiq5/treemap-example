@@ -1,4 +1,5 @@
 import Direction from "../DirectionEnum"
+import Value from "../Model/Value"
 import Node from "./Node"
 
 export default class Tree {
@@ -9,7 +10,7 @@ export default class Tree {
 
     static buildFromArray(data, direction = Direction.leftToRight) {
         let root = new Node()
-        let dataSet = JSON.parse(JSON.stringify(data))
+        let dataSet = JSON.parse(JSON.stringify(data)).map(el => Value.buildFromObject(el))
         const dataSum = data.reduce((sum, el) => el.value + sum, 0)
         let sumLimit = dataSum * 0.5
 
